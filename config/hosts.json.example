@@ -1,0 +1,84 @@
+{
+  "domain": "home.arpa",
+  "subnets": {
+    "lan": "10.33.111.0/24",
+    "vpn": "10.10.10.0/24"
+  },
+  "hosts": [
+    {
+      "name": "gateway",
+      "host": "gateway.home.arpa",
+      "ip": "10.33.111.1",
+      "checks": ["icmp"]
+    },
+    {
+      "name": "netrunner-rpi",
+      "host": "netrunner-rpi.home.arpa",
+      "ip": "10.33.111.141",
+      "ssh_user": "pi",
+      "tags": ["pihole", "wireguard"],
+      "checks": ["icmp", "ssh", "http"],
+      "url": "https://netrunner-rpi.home.arpa/admin/"
+    },
+    {
+      "name": "devstem",
+      "host": "devstem.home.arpa",
+      "ip": "10.33.111.44",
+      "ssh_user": "root",
+      "tags": ["proxmox"],
+      "checks": ["icmp", "ssh", "http"],
+      "url": "https://devstem.home.arpa:8006/"
+    },
+    {
+      "name": "prod-ipa-0",
+      "host": "prod-ipa-0.home.arpa",
+      "ip": "10.33.111.100",
+      "ssh_user": "root",
+      "tags": ["freeipa"],
+      "checks": ["icmp", "ssh", "http"],
+      "url": "https://prod-ipa-0.home.arpa/"
+    },
+    {
+      "name": "prod-git-0",
+      "host": "prod-git-0.home.arpa",
+      "ip": "10.33.111.101",
+      "ssh_user": "root",
+      "tags": ["gitea"],
+      "checks": ["icmp", "ssh", "http"],
+      "url": "http://prod-git-0.home.arpa:3000/"
+    },
+    {
+      "name": "prod-mon-0",
+      "host": "prod-mon-0.home.arpa",
+      "ip": "10.33.111.102",
+      "ssh_user": "root",
+      "tags": ["monitoring", "plg"],
+      "checks": ["icmp", "ssh", "http"],
+      "url": "http://prod-mon-0.home.arpa:3000/api/health"
+    },
+    {
+      "name": "prod-k3s-master-0",
+      "host": "prod-k3s-master-0.home.arpa",
+      "ip": "10.33.111.103",
+      "ssh_user": "root",
+      "tags": ["k3s", "master"],
+      "checks": ["icmp", "ssh"]
+    },
+    {
+      "name": "prod-k3s-worker-0",
+      "host": "prod-k3s-worker-0.home.arpa",
+      "ip": "10.33.111.104",
+      "ssh_user": "root",
+      "tags": ["k3s", "worker"],
+      "checks": ["icmp", "ssh"]
+    },
+    {
+      "name": "prod-k3s-worker-1",
+      "host": "prod-k3s-worker-1.home.arpa",
+      "ip": "10.33.111.105",
+      "ssh_user": "root",
+      "tags": ["k3s", "worker"],
+      "checks": ["icmp", "ssh"]
+    }
+  ]
+}

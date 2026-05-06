@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "label": "Homelab",
+      "items": [
+        { "label": "Status Dashboard", "script": "modules/status.py" }
+      ]
+    },
+    {
+      "label": "System",
+      "items": [
+        { "label": "System Info", "script": "modules/sys_info.sh" },
+        { "label": "System Info (Full)", "script": "modules/sys_info.sh", "args": ["--full"] },
+        { "label": "DEV Note", "script": "modules/log_entry.sh" }
+      ]
+    }
+  ]
+}
