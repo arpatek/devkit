@@ -12,71 +12,71 @@
       "checks": ["icmp"]
     },
     {
-      "name": "netrunner-rpi",
-      "host": "netrunner-rpi.home.arpa",
+      "name": "netrunner",
+      "host": "netrunner.home.arpa",
       "ip": "10.33.111.141",
-      "ssh_user": "pi",
-      "tags": ["pihole", "wireguard"],
+      "ssh_user": "arpatek",
+      "tags": ["pihole", "wireguard", "nas"],
       "checks": ["icmp", "ssh", "http"],
-      "url": "https://netrunner-rpi.home.arpa/admin/"
+      "url": "https://netrunner.home.arpa/admin/"
     },
     {
-      "name": "devstem",
-      "host": "devstem.home.arpa",
+      "name": "blackwall",
+      "host": "blackwall.home.arpa",
       "ip": "10.33.111.44",
-      "ssh_user": "root",
+      "ssh_user": "sysadmin",
       "tags": ["proxmox"],
       "checks": ["icmp", "ssh", "http"],
-      "url": "https://devstem.home.arpa:8006/"
+      "url": "https://blackwall.home.arpa:8006/"
     },
     {
-      "name": "prod-ipa-0",
-      "host": "prod-ipa-0.home.arpa",
+      "name": "mikoshi",
+      "host": "mikoshi.home.arpa",
       "ip": "10.33.111.100",
-      "ssh_user": "root",
-      "tags": ["freeipa"],
+      "ssh_user": "arpatek",
+      "tags": ["freeipa", "dns", "kerberos"],
       "checks": ["icmp", "ssh", "http"],
-      "url": "https://prod-ipa-0.home.arpa/"
+      "url": "https://mikoshi.home.arpa/"
     },
     {
-      "name": "prod-git-0",
-      "host": "prod-git-0.home.arpa",
+      "name": "soulkiller",
+      "host": "soulkiller.home.arpa",
       "ip": "10.33.111.101",
-      "ssh_user": "root",
-      "tags": ["gitea"],
+      "ssh_user": "arpatek",
+      "tags": ["gitea", "ci"],
       "checks": ["icmp", "ssh", "http"],
-      "url": "http://prod-git-0.home.arpa:3000/"
+      "url": "http://soulkiller.home.arpa:3000/"
     },
     {
-      "name": "prod-mon-0",
-      "host": "prod-mon-0.home.arpa",
+      "name": "netwatch",
+      "host": "netwatch.home.arpa",
       "ip": "10.33.111.102",
-      "ssh_user": "root",
+      "ssh_user": "arpatek",
       "tags": ["monitoring", "plg"],
       "checks": ["icmp", "ssh", "http"],
-      "url": "http://prod-mon-0.home.arpa:3000/api/health"
+      "url": "http://netwatch.home.arpa:3000/api/health"
     },
     {
-      "name": "prod-k3s-master-0",
-      "host": "prod-k3s-master-0.home.arpa",
+      "name": "erebus",
+      "host": "erebus.home.arpa",
       "ip": "10.33.111.103",
-      "ssh_user": "root",
-      "tags": ["k3s", "master"],
+      "ssh_user": "arpatek",
+      "tags": ["k3s", "control-plane"],
       "checks": ["icmp", "ssh"]
     },
     {
-      "name": "prod-k3s-worker-0",
-      "host": "prod-k3s-worker-0.home.arpa",
+      "name": "sandevistan",
+      "host": "sandevistan.home.arpa",
       "ip": "10.33.111.104",
-      "ssh_user": "root",
+      "ssh_user": "arpatek",
       "tags": ["k3s", "worker"],
       "checks": ["icmp", "ssh"]
     },
     {
-      "name": "prod-k3s-worker-1",
-      "host": "prod-k3s-worker-1.home.arpa",
+      "name": "kerenzikov",
+      "host": "kerenzikov.home.arpa",
       "ip": "10.33.111.105",
-      "ssh_user": "root",
+      "ssh_user": "arpatek",
       "tags": ["k3s", "worker"],
       "checks": ["icmp", "ssh"]
     }
