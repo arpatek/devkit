@@ -23,6 +23,14 @@ $ ./modules/status.py             # one-shot status grid
 $ ./cc.sh                         # via the launcher: Homelab → Status Dashboard
 """
 
+# ——[ venv bootstrap ]——————————————————————————————————————————————————————————————————
+import os, sys
+from pathlib import Path as _P
+_venv = _P(os.environ.get("DEVKIT_ROOT") or _P(__file__).resolve().parent.parent) / ".venv"
+if _venv.exists() and sys.prefix != str(_venv):
+    os.execv(str(_venv / "bin/python3"), [str(_venv / "bin/python3")] + sys.argv)
+del _venv
+
 # ——[ Imports ]—————————————————————————————————————————————————————————————————————————
 import json
 import os

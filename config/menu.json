@@ -1,17 +1,85 @@
 {
   "items": [
     {
-      "label": "Homelab",
+      "label": "Status",
+      "description": "Homelab overview and service probe summary",
       "items": [
-        { "label": "Status Dashboard", "script": "modules/status.py" }
+        { "label": "Homelab Dashboard", "description": "Connectivity and service probe summary for all hosts", "script": "modules/status.py" },
+        { "label": "Prometheus Targets", "description": "Scrape target health from Prometheus on netwatch", "script": "modules/monitoring.py" }
+      ]
+    },
+    {
+      "label": "Proxmox",
+      "description": "VM and node management on blackwall",
+      "items": [
+        { "label": "VM List",        "description": "All VMs with status, CPU, and memory usage",          "script": "modules/proxmox.py" },
+        { "label": "VM Actions",     "description": "Start, stop, or restart a VM",                        "script": "modules/proxmox.py", "args": ["--interactive"] },
+        { "label": "Node Resources", "description": "Hypervisor CPU, RAM, and storage pool usage",         "script": "modules/proxmox.py", "args": ["--resources"] }
+      ]
+    },
+    {
+      "label": "K3s",
+      "description": "Kubernetes cluster on erebus",
+      "items": [
+        { "label": "Node Status",        "description": "Node readiness, roles, and pod count by namespace", "script": "modules/k3s.py" },
+        { "label": "Pods — default",     "description": "Pod list for the default namespace",                "script": "modules/k3s.py", "args": ["--namespace", "default"] },
+        { "label": "Pods — kube-system", "description": "Pod list for the kube-system namespace",           "script": "modules/k3s.py", "args": ["--namespace", "kube-system"] },
+        { "label": "All Namespaces",     "description": "Pods across all namespaces with status and age",   "script": "modules/k3s.py", "args": ["--all-namespaces"] }
+      ]
+    },
+    {
+      "label": "Pi-hole",
+      "description": "DNS filtering and DHCP on netrunner",
+      "items": [
+        { "label": "Stats Dashboard", "description": "Queries today, blocked count, and gravity list size", "script": "modules/pihole.py" },
+        { "label": "Top Blocked",     "description": "Most frequently blocked domains",                     "script": "modules/pihole.py", "args": ["--top-blocked"] },
+        { "label": "Toggle Blocking", "description": "Enable or disable DNS blocking with confirmation",    "script": "modules/pihole.py", "args": ["--toggle"] },
+        { "label": "DHCP Leases",     "description": "Active DHCP leases with hostname, IP, and MAC",      "script": "modules/pihole.py", "args": ["--leases"] }
+      ]
+    },
+    {
+      "label": "WireGuard",
+      "description": "VPN peer status on netrunner",
+      "items": [
+        { "label": "Peer Status", "description": "Connected peers, endpoints, and last handshake times", "script": "modules/wireguard.sh" }
+      ]
+    },
+    {
+      "label": "Identity",
+      "description": "FreeIPA users, groups, and access control on mikoshi",
+      "items": [
+        { "label": "User List",       "description": "IPA users with account status and group membership",  "script": "modules/ipa.py" },
+        { "label": "Groups",          "description": "IPA groups with member counts",                       "script": "modules/ipa.py", "args": ["--groups"] },
+        { "label": "Enrolled Hosts",  "description": "Hosts enrolled in FreeIPA",                          "script": "modules/ipa.py", "args": ["--hosts"] },
+        { "label": "HBAC Rules",      "description": "Host-based access control rules and their targets",   "script": "modules/ipa.py", "args": ["--hbac"] },
+        { "label": "User Operations", "description": "Enable, disable, or reset a user's password",        "script": "modules/ipa.py", "args": ["--user-ops"] }
+      ]
+    },
+    {
+      "label": "Monitoring",
+      "description": "Prometheus and Grafana on netwatch",
+      "items": [
+        { "label": "Target Health", "description": "Prometheus scrape target status and last scrape time", "script": "modules/monitoring.py" },
+        { "label": "Active Alerts", "description": "Firing and pending Prometheus alerts",                 "script": "modules/monitoring.py", "args": ["--alerts"] },
+        { "label": "Open Grafana",  "description": "Print Grafana URL and attempt to launch in browser",   "script": "modules/monitoring.py", "args": ["--grafana"] }
+      ]
+    },
+    {
+      "label": "Gitea",
+      "description": "CI/CD runners and container registry on soulkiller",
+      "items": [
+        { "label": "Runner Status",    "description": "act_runner status, OS, labels, and last contact", "script": "modules/gitea.py" },
+        { "label": "Recent Pipelines", "description": "Latest action runs across all repos",             "script": "modules/gitea.py", "args": ["--pipelines"] },
+        { "label": "Registry Images",  "description": "Container images in the Gitea package registry", "script": "modules/gitea.py", "args": ["--registry"] }
       ]
     },
     {
       "label": "System",
+      "description": "Local system info and dev notes",
       "items": [
-        { "label": "System Info", "script": "modules/sys_info.sh" },
-        { "label": "System Info (Full)", "script": "modules/sys_info.sh", "args": ["--full"] },
-        { "label": "DEV Note", "script": "modules/log_entry.sh" }
+        { "label": "System Info",        "description": "CPU, memory, disk, and network snapshot",        "script": "modules/sys_info.sh" },
+        { "label": "System Info (Full)", "description": "Detailed system info including all interfaces",  "script": "modules/sys_info.sh", "args": ["--full"] },
+        { "label": "DEV Note",           "description": "Log a timestamped development note to journal", "script": "modules/log_entry.sh" }
       ]
     }
   ]

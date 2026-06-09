@@ -6,7 +6,7 @@
 #              modules/. Supports nested submenus and per-item args.
 # Author: Juan Garcia (arpatek)
 # Created: 2025-04-17
-# Version: 0.2
+# Version: 1.0
 # =============================================================================
 
 # ——[ Configuration ]———————————————————————————————————————————————————————————
@@ -47,6 +47,78 @@ if [ ! -f "$MENU_FILE" ]; then
     exit 1
 fi
 
+if [ ! -d "${DEVKIT_ROOT}/.venv" ]; then
+    echo "Python venv not found — run ./setup.sh first" >&2
+    exit 1
+fi
+
+# ——[ Theme ]———————————————————————————————————————————————————————————————————
+# Available: amber  cyan  green  purple  blue
+: "${DEVKIT_THEME:=amber}"
+
+_write_dialogrc() {
+    local accent
+    case "$DEVKIT_THEME" in
+        amber)  accent=YELLOW  ;;
+        cyan)   accent=CYAN    ;;
+        green)  accent=GREEN   ;;
+        purple) accent=MAGENTA ;;
+        blue)   accent=BLUE    ;;
+        *)      accent=YELLOW  ;;
+    esac
+
+    cat > "${DEVKIT_ROOT}/.dialogrc" << EOF
+use_shadow = OFF
+use_colors = ON
+
+screen_color              = (${accent},BLACK,OFF)
+dialog_color              = (WHITE,BLACK,OFF)
+title_color               = (${accent},BLACK,ON)
+border_color              = (${accent},BLACK,ON)
+border2_color             = (${accent},BLACK,ON)
+
+button_active_color       = (BLACK,${accent},ON)
+button_inactive_color     = (${accent},BLACK,OFF)
+button_key_active_color   = (BLACK,${accent},ON)
+button_key_inactive_color = (${accent},BLACK,OFF)
+button_label_active_color = (BLACK,${accent},ON)
+button_label_inactive_color = (${accent},BLACK,OFF)
+
+menubox_color             = (WHITE,BLACK,OFF)
+menubox_border_color      = (${accent},BLACK,ON)
+menubox_border2_color     = (${accent},BLACK,ON)
+item_color                = (WHITE,BLACK,OFF)
+item_selected_color       = (BLACK,${accent},ON)
+tag_color                 = (${accent},BLACK,ON)
+tag_selected_color        = (BLACK,${accent},ON)
+tag_key_color             = (${accent},BLACK,OFF)
+tag_key_selected_color    = (BLACK,${accent},ON)
+itemhelp_color            = (GREEN,BLACK,OFF)
+
+inputbox_color            = (WHITE,BLACK,OFF)
+inputbox_border_color     = (${accent},BLACK,ON)
+inputbox_border2_color    = (${accent},BLACK,ON)
+searchbox_color           = (WHITE,BLACK,OFF)
+searchbox_border_color    = (${accent},BLACK,ON)
+searchbox_border2_color   = (${accent},BLACK,ON)
+searchbox_title_color     = (${accent},BLACK,ON)
+position_indicator_color  = (${accent},BLACK,ON)
+
+check_color               = (WHITE,BLACK,OFF)
+check_selected_color      = (BLACK,${accent},ON)
+uarrow_color              = (${accent},BLACK,ON)
+darrow_color              = (${accent},BLACK,ON)
+gauge_color               = (BLACK,${accent},ON)
+
+form_active_text_color    = (WHITE,BLACK,ON)
+form_text_color           = (WHITE,BLACK,OFF)
+form_item_readonly_color  = (${accent},BLACK,OFF)
+EOF
+}
+
+_write_dialogrc
+export DIALOGRC="${DEVKIT_ROOT}/.dialogrc"
+
 # ——[ Handlers ]————————————————————————————————————————————————————————————————
 
 trap ctrl_c INT
@@ -75,19 +147,42 @@ function show_menu() {
         local args=()
         local i
         for ((i = 0; i < count; i++)); do
-            local label
+            local label desc
             label=$(jq -r ".[$i].label" <<< "$items_json")
-            args+=("$((i + 1))" "$label")
+            desc=$(jq -r ".[$i].description // \"\"" <<< "$items_json")
+            args+=("$((i + 1))" "$label" "$desc")
         done
 
         local choice rc
         exec 3>&1
         choice=$(dialog --clear --backtitle "DevKit Command Center" \
             --title "[ $title ]" \
-            --ok-label "SELECT" --cancel-label "$back_label" \
-            --menu "Choose:" 15 60 8 "${args[@]}" 2>&1 1>&3)
+            --ok-label "SELECT" --cancel-label "$back_label" --help-label "HELP" \
+            --item-help --help-button \
+            --menu "Choose:" 20 72 10 "${args[@]}" 2>&1 1>&3)
         rc=$?
         exec 3>&-
+
+        if [ $rc -eq 2 ]; then
+            dialog --backtitle "DevKit Command Center" \
+                --title "[ HELP ]" \
+                --msgbox "\
+Modules:\n\
+  Status      — Homelab probe summary and Prometheus targets\n\
+  Proxmox     — VM list, lifecycle actions, node resources\n\
+  K3s         — Kubernetes nodes, pods, namespaces\n\
+  Pi-hole     — DNS stats, top blocked, DHCP leases, blocking toggle\n\
+  WireGuard   — VPN peer status and handshake times\n\
+  Identity    — IPA users, groups, hosts, HBAC, user ops\n\
+  Monitoring  — Prometheus targets, alerts, Grafana launcher\n\
+  Gitea       — CI runner status, pipeline runs, registry images\n\
+  System      — Local system info and dev notes\n\
+\n\
+Setup:        ./setup.sh\n\
+Secrets:      config/secrets.env\n\
+Menu config:  config/menu.json" 22 62
+            continue
+        fi
 
         if [ $rc -ne $DIALOG_OK ]; then
             return $rc
@@ -129,7 +224,7 @@ echo -e "
 ██████╔╝███████╗ ╚████╔╝ ██║  ██╗██║   ██║
 ╚═════╝ ╚══════╝  ╚═══╝  ╚═╝  ╚═╝╚═╝   ╚═╝
 
-                    ${COLORS[red]}Dev${COLORS[yellow]}Kit ${COLORS[green]}Command Center ${COLORS[purple]}v0.2${COLORS[reset]}"
+                    ${COLORS[red]}Dev${COLORS[yellow]}Kit ${COLORS[green]}Command Center ${COLORS[purple]}v1.0${COLORS[reset]}"
 sleep 2
 
 # ——[ Main ]————————————————————————————————————————————————————————————————————

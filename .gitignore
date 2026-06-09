@@ -10,3 +10,12 @@ __pycache__/
 
 # Local-only homelab inventory (copy hosts.json.example → hosts.json)
 config/hosts.json
+
+# Service credentials (copy secrets.env.example → secrets.env)
+config/secrets.env
+
+# Python virtual environment
+.venv/
+
+# Generated at runtime by cc.sh
+.dialogrc
