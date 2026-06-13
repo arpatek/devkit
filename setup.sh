@@ -281,12 +281,12 @@ _verify_kubectl() {
 
   # Print server URL — informational only; reachability check below is the real gate
   local server
-  server="$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}' 2>/dev/null)" || true
+  server="$(KUBECONFIG="$kubeconfig" kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}' 2>/dev/null)" || true
   ok "kubeconfig server: ${server}"
 
   # Verify cluster API is reachable
   info "Testing cluster API reachability..."
-  if kubectl cluster-info --request-timeout=5s 2>/dev/null | grep -q "Kubernetes control plane"; then
+  if KUBECONFIG="$kubeconfig" kubectl cluster-info --request-timeout=10s 2>/dev/null | grep -q "Kubernetes control plane"; then
     ok "Kubernetes control plane is reachable"
   else
     warn "Cannot reach cluster API — ensure you are on the LAN or VPN, then run: kubectl cluster-info"
@@ -296,7 +296,7 @@ _verify_kubectl() {
   # Node check
   info "Checking node status..."
   local node_out
-  node_out="$(kubectl get nodes --no-headers 2>/dev/null)" || true
+  node_out="$(KUBECONFIG="$kubeconfig" kubectl get nodes --no-headers 2>/dev/null)" || true
   if [[ -n "$node_out" ]]; then
     local total ready
     total="$(printf '%s\n' "$node_out" | wc -l | tr -d ' ')"
@@ -315,9 +315,10 @@ step_kubeconfig() {
 
   local kubeconfig="${HOME}/.kube/config"
   local k3s_host="erebus.home.arpa"
+  local k3s_ip="10.33.111.103"
   local k3s_user="arpatek"
 
-  if [[ -f "$kubeconfig" ]] && grep -q "erebus.home.arpa" "$kubeconfig" 2>/dev/null; then
+  if [[ -f "$kubeconfig" ]] && grep -qE "erebus\.home\.arpa|10\.33\.111\.103" "$kubeconfig" 2>/dev/null; then
     ok "kubeconfig already points to erebus: ${kubeconfig}"
     _verify_kubectl "$kubeconfig" "$k3s_host"
     return 0
@@ -371,7 +372,7 @@ step_kubeconfig() {
   if ssh -n -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new \
        "${k3s_user}@${k3s_host}" \
        "cat '${tmp_remote}'" 2>/dev/null \
-     | sed "s/127.0.0.1/${k3s_host}/" > "${kubeconfig}" \
+     | sed "s/127.0.0.1/${k3s_ip}/" > "${kubeconfig}" \
      && [[ -s "${kubeconfig}" ]]; then
     chmod 600 "${kubeconfig}"
     ssh -n -o ConnectTimeout=5 "${k3s_user}@${k3s_host}" "rm -f '${tmp_remote}'" 2>/dev/null || true
