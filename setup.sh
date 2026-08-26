@@ -150,7 +150,7 @@ step_perms() {
   ok "All modules are executable"
 }
 
-# ──[ Step: Python virtual environment ]───────────────────────────────────────
+# ──[ Step: Python virtual environment ]────────────────────────────────────────
 step_python() {
   step "Python virtual environment"
 

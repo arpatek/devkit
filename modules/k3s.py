@@ -26,7 +26,7 @@ Usage:
 
 __version__ = "1.0.0"
 
-# ──[ venv bootstrap ]─────────────────────────────────────────────────────────────────
+# ──[ venv bootstrap ]──────────────────────────────────────────────────────────────────
 import os, sys
 from pathlib import Path as _P
 _venv = _P(os.environ.get("DEVKIT_ROOT") or _P(__file__).resolve().parent.parent) / ".venv"
