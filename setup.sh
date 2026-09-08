@@ -185,13 +185,11 @@ step_python() {
 }
 
 # ──[ Step: WireGuard access ]──────────────────────────────────────────────────
-step_wg_sudoers() {
+step_wg_access() {
   step "WireGuard access"
 
   local wg_host="netrunner.home.arpa"
   local wg_user="arpatek"
-  local sudoers_rule="${wg_user} ALL=(root) NOPASSWD: /usr/bin/wg show all dump"
-  local sudoers_dst="/etc/sudoers.d/devkit-wg"
 
   # Remove the old forced-command key entry if devkit-wg.key.pub exists locally.
   # netrunner is FreeIPA-enrolled — SSSD intercepts key lookups and serves keys
@@ -215,36 +213,12 @@ step_wg_sudoers() {
     fi
   fi
 
-  # Ensure sudoers entry is present. On a fresh install sudo requires a TTY (use_pty
-  # Defaults); -t allocates one. On re-runs the check passes via the existing NOPASSWD
-  # rule and skips the push entirely.
-  info "Checking sudoers entry on ${wg_host}..."
-  if ssh -n -o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new \
-       "${wg_user}@${wg_host}" \
-       "sudo grep -qF 'wg show all dump' '${sudoers_dst}' 2>/dev/null" 2>/dev/null; then
-    ok "sudoers entry already present: ${sudoers_dst}"
-  else
-    info "Pushing sudoers entry (sudo password on ${wg_host} may be required)..."
-    if ssh -t -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new \
-         "${wg_user}@${wg_host}" \
-         "{ echo '${sudoers_rule}'; echo 'Defaults:${wg_user} !use_pty'; } | sudo tee ${sudoers_dst} > /dev/null && sudo chmod 440 ${sudoers_dst}" 2>/dev/null; then
-      ok "sudoers entry written: ${sudoers_dst}"
-    else
-      warn "Could not write sudoers entry on ${wg_host} — add manually:"
-      blank
-      printf "    On netrunner, run:\n"
-      printf "    echo '%s' | sudo tee %s\n" "$sudoers_rule" "$sudoers_dst"
-      printf "    echo 'Defaults:%s !use_pty' | sudo tee -a %s\n" "$wg_user" "$sudoers_dst"
-      printf "    sudo chmod 440 %s\n" "$sudoers_dst"
-      blank
-      return 0
-    fi
-  fi
-
-  # Smoke test via regular SSH with scoped sudo — no special key needed
-  info "Testing WireGuard access..."
+  # No sudoers rule is installed on purpose: wg show all dump prints the interface
+  # private key as the first field of its first line, so it stays behind a password
+  # prompt. See docs/decisions.md. -t allocates the TTY sudo needs to ask for it.
+  info "Testing WireGuard access (sudo password on ${wg_host} required)..."
   local test_out ssh_rc=0
-  test_out="$(ssh -n -o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new \
+  test_out="$(ssh -t -o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new \
     "${wg_user}@${wg_host}" "sudo /usr/bin/wg show all dump" 2>/dev/null)" || ssh_rc=$?
 
   if [[ "$test_out" == *"wg0"* ]]; then
@@ -475,7 +449,7 @@ main() {
   step_configs
   step_perms
   step_python
-  step_wg_sudoers
+  step_wg_access
   step_kubeconfig
   step_secrets
   print_summary
