@@ -90,7 +90,7 @@ header matching the IPA web UI origin is required.
 to `/usr/bin/wg show all dump` grants the one command needed. No interactive session
 required.
 
-**k3s** — `kubectl` on silverhand with kubeconfig at `~/.kube/config` pointing directly
+**k3s** — `kubectl` on darwin with kubeconfig at `~/.kube/config` pointing directly
 to `https://erebus.home.arpa:6443`. No SSH involved.
 
 **Prometheus / Grafana** — Unauthenticated HTTP on the internal LAN.

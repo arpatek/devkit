@@ -24,7 +24,7 @@ This achieves the same scope: one command, no password, no broader access.
 
 ## K3s via local kubectl, not SSH
 
-`k3s.py` runs `kubectl` locally on silverhand with a kubeconfig pointing directly to
+`k3s.py` runs `kubectl` locally on darwin with a kubeconfig pointing directly to
 `https://erebus.home.arpa:6443`. This is cleaner than SSHing into erebus — the k3s API
 server is reachable from the LAN and `kubectl` is already the right tool for the job.
 
@@ -50,10 +50,10 @@ custom openers. The `?sid=` approach is reliable and is what Pi-hole's own web U
 `_PiholeSession` subclasses `Session` and overrides `get`/`post` to append `?sid=` to
 every URL so the rest of the module doesn't need to think about it.
 
-## No IPA Kerberos on silverhand
+## No IPA Kerberos on darwin
 
 `ipa.py` uses username/password auth via `POST /ipa/session/login_password`. This avoids
-any Kerberos setup on silverhand (keytab, ccache, `kinit`). The session cookie returned
+any Kerberos setup on darwin (keytab, ccache, `kinit`). The session cookie returned
 is valid for ~20 minutes — long enough for any devkit operation.
 
 ## setup.sh stages kubeconfig via PTY
