@@ -26,10 +26,9 @@ readonly WG_USER="arpatek"
 # Map VPN tunnel IPs (allowed_ips) to friendly device names.
 # These are the static WireGuard peer assignments — not secrets.
 declare -A PEER_NAMES=(
-  ["10.10.10.10/32"]="malorian"
+  ["10.10.10.10/32"]="darwin"
   ["10.10.10.11/32"]="uplink"
   ["10.10.10.12/32"]="dataslab"
-  ["10.10.10.13/32"]="silverhand"
 )
 
 # ──[ Helpers ]─────────────────────────────────────────────────────────────────
