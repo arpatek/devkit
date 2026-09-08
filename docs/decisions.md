@@ -66,3 +66,18 @@ when called from a non-interactive SSH session.
 allocated), where sudo can run, writing the file to `/tmp`. A second non-interactive
 `-n` SSH then fetches the staged file without needing sudo. The temp file is cleaned up
 in both the local and remote traps.
+
+## Diagnostics tooling is out of scope
+
+Hardware and system triage — `smartmontools`, `ipmitool`, `dmidecode`, `tcpdump` and the
+rest of a rescue toolkit — does not belong here, and the reason is the premise stated in
+the README: devkit is "a single launcher already wired to your infra."
+
+Every module targets a named host with known credentials. A diagnostics toolkit runs on
+hardware with no name, no DNS entry, and nothing configured — often a machine seen for the
+first time. Adding it would cost devkit the one idea that makes it coherent, and the two
+would drift apart immediately: this repo grows toward the lab, a triage tool grows toward
+portability.
+
+It gets its own repo, Alpine-based and PXE-bootable. Plan lives outside the repo for now
+at `~/Documents/diagnostics-toolkit.md`.
