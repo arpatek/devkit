@@ -2,7 +2,9 @@
 # =============================================================================
 # Script Name: wireguard.sh
 # Description: WireGuard peer status — SSHes to netrunner and runs
-#              wg show all dump via a scoped NOPASSWD sudo rule.
+#              wg show all dump. sudo prompts for a password: that
+#              command emits the interface private key, so it is
+#              deliberately not a NOPASSWD rule.
 # Author: Juan Garcia (arpatek)
 # Created: 2026-06-08
 # Version: 1.0

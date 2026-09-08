@@ -46,7 +46,7 @@ Each module is a standalone executable. Python modules use `lib/api.py` and
 | `proxmox.py` | HTTPS REST (port 8006) | API token header |
 | `k3s.py` | HTTPS (port 6443) | kubeconfig |
 | `pihole.py` | HTTPS REST | session SID via `?sid=` query param |
-| `wireguard.sh` | SSH | NOPASSWD sudoers rule scoped to `wg show all dump` |
+| `wireguard.sh` | SSH | `sudo` password prompt — deliberately not NOPASSWD |
 | `ipa.py` | HTTPS XML-RPC | session cookie via `login_password` |
 | `monitoring.py` | HTTP REST | none (open LAN) |
 | `gitea.py` | HTTP REST | bearer token header |
@@ -86,9 +86,9 @@ Passed as `Authorization: token <value>` header.
 cookie captured by the `CookieJar`. All XML-RPC calls reuse that session. A `Referer`
 header matching the IPA web UI origin is required.
 
-**WireGuard** — Regular SSH to netrunner as `arpatek`. A NOPASSWD sudoers rule scoped
-to `/usr/bin/wg show all dump` grants the one command needed. No interactive session
-required.
+**WireGuard** — Regular SSH to netrunner as `arpatek`, then `sudo wg show all dump`.
+sudo prompts for a password by design: that command emits the interface private key, so
+it is deliberately not a NOPASSWD rule. The module needs a terminal.
 
 **k3s** — `kubectl` on darwin with kubeconfig at `~/.kube/config` pointing directly
 to `https://erebus.home.arpa:6443`. No SSH involved.

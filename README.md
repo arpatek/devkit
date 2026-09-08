@@ -64,7 +64,6 @@ chmod +x modules/*.py modules/*.sh
 ### What setup.sh does
 
 - Creates a Python venv under `.venv/` and installs `rich`
-- Pushes a scoped `NOPASSWD` sudoers rule to netrunner for `wg show all dump`
 - Fetches the k3s kubeconfig from erebus and writes it to `~/.kube/config`
 - Validates all required secrets are present in `secrets.env`
 
@@ -83,15 +82,12 @@ Put in `secrets.env`.
 **IPA credentials** — Admin username + password for XML-RPC auth. Put in `secrets.env`.
 No Kerberos setup required.
 
-**WireGuard access** — `setup.sh` handles this. It pushes the following sudoers rule to
-netrunner via SSH:
+**WireGuard access** — Nothing to set up. `wireguard.sh` SSHes to netrunner and runs
+`sudo wg show all dump`, which prompts for your password.
 
-```
-arpatek ALL=(root) NOPASSWD: /usr/bin/wg show all dump
-```
-
-File: `/etc/sudoers.d/devkit-wg` (mode 440). The rule is scoped to the single binary
-and argument — no broader sudo access is granted.
+This is deliberately *not* a NOPASSWD sudoers rule. `wg show all dump` prints the
+interface private key as the first field of its first line, so a passwordless rule would
+hand the VPN private key to anyone reaching the `arpatek` account. See `docs/decisions.md`.
 
 ---
 

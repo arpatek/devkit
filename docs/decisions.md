@@ -16,11 +16,24 @@ This was abandoned because netrunner is enrolled in FreeIPA. FreeIPA-enrolled ho
 from the IPA directory and the `command=` restriction in `~/.ssh/authorized_keys` is
 bypassed entirely.
 
-The replacement is a NOPASSWD sudoers rule scoped to the single binary and argument:
+A NOPASSWD sudoers rule scoped to the single binary and argument was considered:
 ```
 arpatek ALL=(root) NOPASSWD: /usr/bin/wg show all dump
 ```
-This achieves the same scope: one command, no password, no broader access.
+It was rejected and is not present on netrunner. `wg show all dump` prints the interface
+private key as the first field of its first line — see `man wg`. A NOPASSWD rule would
+mean anyone reaching the `arpatek` account, via a stolen SSH key or a hijacked agent
+socket, reads the WireGuard private key with no further challenge.
+
+So `sudo` prompts for a password and the module is interactive by design. The scope
+argument still holds — one command, no broader access — but the convenience is not worth
+gating the VPN's private key behind nothing.
+
+`wg show` has narrower subcommands (`endpoints`, `allowed-ips`, `latest-handshakes`,
+`transfer`) that never emit the private key, and `wireguard.sh` already discards the
+interface line it arrives on. Switching to those would be the prerequisite for ever making
+this passwordless safely. Not done — with a password in place it buys little, since anyone
+who can run the command already has root on netrunner, where the key lives in plaintext.
 
 ## K3s via local kubectl, not SSH
 
