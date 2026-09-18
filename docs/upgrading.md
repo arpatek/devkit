@@ -28,7 +28,7 @@ returning 401 or 404:
 
 ## Gitea
 
-Gitea renames and reorganises API routes between major versions. If a Gitea module
+Gitea renames and reorganizes API routes between major versions. If a Gitea module
 starts returning 404:
 
 1. Fetch the live API spec: `curl http://<host>:3000/swagger.v1.json`

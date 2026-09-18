@@ -190,7 +190,7 @@ def do_action(session: Session, base: str, action: str, vmid: int, name: str = "
     color = {"start": "green", "stop": "red", "restart": "yellow"}.get(action, "white")
 
     if not Confirm.ask(f"[{color}]{action.upper()}[/{color}] VM [cyan]{label}[/cyan] ({vmid})?"):
-        console.print("[dim]Cancelled.[/dim]")
+        console.print("[dim]Canceled.[/dim]")
         return
 
     endpoint = f"nodes/{node}/qemu/{vmid}/{ACTION_MAP[action]}"
@@ -210,7 +210,7 @@ def do_snapshot(session: Session, base: str, vmid: int, name: str = "") -> None:
     desc = Prompt.ask("Description", default="")
 
     if not Confirm.ask(f"Create snapshot [cyan]{snapname}[/cyan] of VM {vmid}?"):
-        console.print("[dim]Cancelled.[/dim]")
+        console.print("[dim]Canceled.[/dim]")
         return
 
     try:

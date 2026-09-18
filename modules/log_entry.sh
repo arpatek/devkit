@@ -29,7 +29,7 @@ rc=$?
 clear
 
 if [ $rc -ne 0 ] || [ -z "$msg" ]; then
-    echo "Cancelled — no entry recorded."
+    echo "Canceled — no entry recorded."
     exit 0
 fi
 

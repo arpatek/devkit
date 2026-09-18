@@ -80,7 +80,7 @@ class _PiholeSession(Session):
 
 
 def _auth(host: str, password: str) -> _PiholeSession:
-    """Authenticate with Pi-hole v6 API. Returns an authorised session."""
+    """Authenticate with Pi-hole v6 API. Returns an authorized session."""
     bootstrap = Session(verify_ssl=False)
     try:
         resp = bootstrap.post(f"https://{host}/api/auth", {"password": password})
@@ -166,7 +166,7 @@ def render_toggle(session: _PiholeSession, host: str) -> None:
 
     console.print(f"  Blocking is currently {current}")
     if not Confirm.ask(f"[{color}]{action.upper()}[/{color}] blocking?"):
-        console.print("[dim]Cancelled.[/dim]")
+        console.print("[dim]Canceled.[/dim]")
         return
 
     session.post(f"https://{host}/api/dns/blocking", {"blocking": not blocking})
