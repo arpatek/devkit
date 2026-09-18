@@ -1,5 +1,7 @@
 # devkit
 
+[![built by arpatek](.assets/badge.svg)](https://arpatek.dev)
+
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
